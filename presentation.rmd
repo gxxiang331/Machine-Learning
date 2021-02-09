@@ -1,0 +1,77 @@
+---
+ title: "Lab: Non-linear Modeling"
+ author: "Group 2"
+output: html_document
+---
+
+```{r}
+rm(list=ls())
+
+library(ISLR)
+attach(Wage)
+```
+load dataset from library
+attack the dataset wage
+
+```{r}
+fit=lm(wage∼poly(age ,4) ,data=Wage)
+summary(fit)
+```
+generate basis, input age
+summary of fit
+
+```{r}
+agelims =range(age)
+age.grid=seq(from=agelims [1],to=agelims [2])
+preds=predict (fit ,newdata =list(age=age.grid),se=TRUE)
+se.bands=cbind(preds$fit +2* preds$se,preds$fit -2* preds$se)
+plot(age,wage,col="darkgrey")
+lines(age.grid ,preds$fit ,lwd=2,col="blue")
+matlines (age.grid ,se.bands ,lwd=1, col=" blue",lty=2)
+```
+
+```{r}
+fit1=lm(wage~age+I(age^2)+I(age^3)+I(age^4),data=Wage)
+summary(fit1)
+```
+
+```{r}
+plot(fitted(fit),fitted(fit1))
+```
+
+```{r}
+summary(fit)
+```
+
+```{r}
+fit1=lm(wage~education,data=Wage)
+fit2=lm(wage∼education +age ,data=Wage)
+fit3=lm(wage∼education +poly(age ,2) ,data=Wage)
+fit4=lm(wage∼education +poly(age ,3) ,data=Wage)
+anova(fit1,fit2,fit3,fit4)
+```
+
+```{r}
+fit=glm(I(wage >250)∼poly(age ,3),data=Wage , family=binomial)
+summary(fit)
+preds=predict(fit,list(age=age.grid),se=T)
+se.bands=preds$fit + cbind(fit=0,lower=-2*preds$se,upper=2*preds$se)
+se.bands[1:5,]
+```
+
+
+
+
+
+
+
+
+
+
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
